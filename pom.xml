@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.eindopdracht-backend</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>eindopdrachtBackend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>EindopdrachtBackend</name>
 	<description>Eindopdracht backend</description>
