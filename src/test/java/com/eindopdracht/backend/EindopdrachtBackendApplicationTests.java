@@ -1,4 +1,4 @@
-package com.eindopdracht_backend.demo;
+package com.eindopdracht.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
