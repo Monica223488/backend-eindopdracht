@@ -1,4 +1,4 @@
-package com.eindopdracht.backend.utils;
+package com.eindopdracht.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,7 @@
-package com.eindopdracht_backend.demo.controllers;
+package com.eindopdracht.backend.controllers;
 
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
 public class ReceiptController {
 }
