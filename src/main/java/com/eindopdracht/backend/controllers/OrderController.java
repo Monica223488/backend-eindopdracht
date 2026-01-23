@@ -1,22 +1,44 @@
 package com.eindopdracht.backend.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.eindopdracht.backend.dtos.OrderRequestDto;
+import com.eindopdracht.backend.dtos.OrderResponseDto;
+import com.eindopdracht.backend.mapper.OrderMapper;
+import com.eindopdracht.backend.models.Order;
+import com.eindopdracht.backend.services.OrderService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/orders")
 public class OrderController {
 
-    private String text;
+    private final OrderService service;
 
-    @GetMapping("/orders")
-    public String sayHello() {
-        return "Hi there";
+    public OrderController(OrderService service) {
+        this.service = service;
     }
-    @PostMapping("/orders")
-        public String saveOrder(@RequestParam String text) {
-        this.text = text;
-        return "Done";
+
+    @PostMapping
+    public ResponseEntity<OrderResponseDto> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto) {
+
+        Order order = this.service.createOrder(orderRequestDto);
+        OrderResponseDto orderResponseDto = OrderMapper.toResponseDto(order);
+
+        URI uri = URI.create(
+                ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/" + order.getId()).toUriString());
+            return ResponseEntity.created(uri).body(orderResponseDto);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable int id){
+       return ResponseEntity.ok(OrderMapper.toResponseDto(this.service.getSingleOrder(id)));
+    }
+
 }
