@@ -13,6 +13,14 @@ public class Customer {
     private int phoneNumber;
     private String address;
 
+    public Customer(){}
+
+    public Customer(String name, int phoneNumber, String address) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
+
     // getters
 
     public Long getId() {
