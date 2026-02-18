@@ -1,7 +1,11 @@
 package com.eindopdracht.backend.dtos;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+
 public class CustomerRequestDto {
+    @NotEmpty
     public String name;
-    public int phoneNumber;
-    public String address;
+    @Min(value=10)
+    public String phoneNumber;
 }

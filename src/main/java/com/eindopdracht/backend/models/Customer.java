@@ -10,15 +10,13 @@ public class Customer {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private int phoneNumber;
-    private String address;
+    private String phoneNumber;
 
     public Customer(){}
 
-    public Customer(String name, int phoneNumber, String address) {
+    public Customer(String name, String phoneNumber) {
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.address = address;
     }
 
     // getters
@@ -31,13 +29,10 @@ public class Customer {
         return name;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public String getAddress() {
-        return address;
-    }
 
     // setters
 
@@ -46,11 +41,8 @@ public class Customer {
         this.name = name;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
 }
