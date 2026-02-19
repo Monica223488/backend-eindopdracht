@@ -1,21 +1,29 @@
 package com.eindopdracht.backend.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@NoArgsConstructor
 @Table(name = "orders")
 public class Order {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+    @Setter
     private String paperType;
+    @Setter
     private int amount;
+    @Setter
     private float price;
+    @Setter
     private String status;
+    @Setter
     private String size;
-
-    public Order() {}
 
     public Order(String paperType, int amount, float price, String status, String size) {
         this.paperType = paperType;
@@ -25,50 +33,4 @@ public class Order {
         this.size = size;
     }
 
-    //getters
-    public Long getId() {
-        return id;
-    }
-
-
-    public String getPaperType() {
-        return paperType;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    //setters
-    public void setPaperType(String paperType) {
-        this.paperType = paperType;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
 }
