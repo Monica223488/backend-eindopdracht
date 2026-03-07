@@ -28,6 +28,8 @@ public class Photo {
     private String storageKey;
     @Setter
     private Instant uploadedAt;
+    @Setter
+    private Integer sortIndex;
 
     public static Photo create(String originalFileName, String contentType, long size, String storageKey) {
         return new Photo(originalFileName, contentType, size, storageKey, Instant.now());
@@ -42,6 +44,7 @@ public class Photo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photobook_id")
+    @Setter
     private Photobook photobook;
 
     public Photo(String originalFileName, String contentType, long size, String storageKey, Instant uploadedAt) {

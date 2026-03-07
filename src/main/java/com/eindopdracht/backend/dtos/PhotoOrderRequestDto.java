@@ -1,4 +1,8 @@
 package com.eindopdracht.backend.dtos;
 
-public class PhotobookRequestDto {
+import java.util.List;
+import java.util.UUID;
+
+public class PhotoOrderRequestDto {
+    public List<UUID> photoIds;
 }

@@ -25,10 +25,14 @@ public class Photobook {
     @Setter
     private Instant approvedAt;
     @Setter
+    private Instant sentToPrinterAt;
+    @Setter
+    private String lastFeedback;
+    @Setter
     private int pages;
 
-
     @Enumerated(EnumType.STRING)
+    @Setter
     private PhotobookStatus status;
 
     public enum PhotobookStatus {
@@ -36,11 +40,14 @@ public class Photobook {
         DESIGNING,
         READY_FOR_REVIEW,
         APPROVED,
+        REJECTED,
         SENT_TO_PRINTER,
+        PRINTED,
         READY_FOR_PICKUP
     }
 
     @OneToMany(mappedBy = "photobook")
+    @OrderBy("sortIndex ASC")
     private List<Photo> photos = new ArrayList<>();
 
     @OneToOne
@@ -53,5 +60,26 @@ public class Photobook {
         this.approvedAt = approvedAt;
         this.pages = pages;
         this.status = status;
+    }
+
+    public static Photobook create(String title){
+        Photobook photobook = new Photobook();
+        photobook.title = (title == null || title.isBlank()) ? "Untitled photobook" : title;
+        photobook.createdAt = Instant.now();
+        photobook.status = PhotobookStatus.UPLOADING;
+        return photobook;
+    }
+
+    @PrePersist
+    public void generateId() {
+        if (id == null){
+            id = UUID.randomUUID();
+        }
+        if (createdAt == null) {
+            createdAt = Instant.now();
+        }
+        if (status == null) {
+            status = PhotobookStatus.UPLOADING;
+        }
     }
 }
