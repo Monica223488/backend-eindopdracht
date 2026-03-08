@@ -7,6 +7,8 @@ import com.eindopdracht.backend.models.Order;
 import com.eindopdracht.backend.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class OrderService {
 
@@ -20,7 +22,7 @@ public class OrderService {
         return this.repos.save(OrderMapper.toEntity(orderRequestDto));
     }
 
-    public Order getSingleOrder(int id){
+    public Order getSingleOrder(UUID id){
         return this.repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order" + id + "not found!" ));
     }
 }

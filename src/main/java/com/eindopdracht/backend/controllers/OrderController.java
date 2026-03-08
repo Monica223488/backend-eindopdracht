@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/orders")
@@ -37,7 +38,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable int id){
+    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable UUID id){
        return ResponseEntity.ok(OrderMapper.toResponseDto(this.service.getSingleOrder(id)));
     }
 

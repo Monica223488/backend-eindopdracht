@@ -1,5 +1,7 @@
 package com.eindopdracht.backend.services;
 
+import com.eindopdracht.backend.exceptions.BadRequestException;
+import com.eindopdracht.backend.exceptions.ResourceNotFoundException;
 import com.eindopdracht.backend.models.Photo;
 import com.eindopdracht.backend.repositories.PhotoRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,11 +35,11 @@ public class PhotoService {
     }
 
     public Photo upload(MultipartFile file) {
-        if (file.isEmpty()) throw new RuntimeException("Leeg bestand");
+        if (file.isEmpty()) throw new BadRequestException("Leeg bestand");
 
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
-            throw new RuntimeException("Alleen afbeeldingen toegestaan");
+            throw new BadRequestException("Alleen afbeeldingen toegestaan");
         }
 
         UUID id = UUID.randomUUID();
@@ -67,15 +69,15 @@ public class PhotoService {
 
     public Photo getMeta(UUID id) {
         return photoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Foto niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Foto niet gevonden"));
     }
 
     public Resource loadAsResource(String storageKey) {
         try {
             Path path = root.resolve(storageKey).normalize();
-            if (!path.startsWith(root)) throw new RuntimeException ("Ongeldig pad");
+            if (!path.startsWith(root)) throw new BadRequestException ("Ongeldig pad");
             Resource res = new UrlResource(path.toUri());
-            if (!res.exists()) throw new RuntimeException("Bestand niet gevonden");
+            if (!res.exists()) throw new ResourceNotFoundException("Bestand niet gevonden");
             return res;
         } catch (Exception e){
             throw new RuntimeException("Bestand niet gevonden", e);

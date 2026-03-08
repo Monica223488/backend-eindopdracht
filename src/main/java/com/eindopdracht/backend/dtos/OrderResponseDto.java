@@ -1,7 +1,9 @@
 package com.eindopdracht.backend.dtos;
 
+import java.util.UUID;
+
 public class OrderResponseDto {
-    public int id;
+    public UUID id;
     public String paperType;
     public int amount;
     public float price;
