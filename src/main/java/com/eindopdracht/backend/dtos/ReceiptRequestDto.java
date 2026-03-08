@@ -1,7 +1,7 @@
 package com.eindopdracht.backend.dtos;
 
+import java.util.UUID;
+
 public class ReceiptRequestDto {
-    public String summary;
-    public String customerInformation;
-    public String appointmentInformation;
+    public UUID orderId;
 }
