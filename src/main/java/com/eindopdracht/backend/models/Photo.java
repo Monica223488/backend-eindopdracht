@@ -19,12 +19,14 @@ public class Photo {
     @Setter
     private String name;
     @Setter
+    @Column(nullable = false)
     private String originalFileName;
     @Setter
     private String contentType;
     @Setter
     private Long size;
     @Setter
+    @Column(nullable = false)
     private String storageKey;
     @Setter
     private Instant uploadedAt;
