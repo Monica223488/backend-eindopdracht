@@ -9,6 +9,7 @@ import com.eindopdracht.backend.models.Photobook;
 import com.eindopdracht.backend.services.PhotobookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -65,6 +66,7 @@ public class PhotobookController {
     }
 
     @PatchMapping("/{id}/reject")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public PhotobookResponseDto reject(@PathVariable UUID id, @RequestBody(required = false) PhotobookRejectionDto dto){
         String comment = dto == null ? null : dto.comment;
         return new PhotobookResponseDto(photobookService.reject(id, comment));
@@ -72,11 +74,13 @@ public class PhotobookController {
     }
 
     @PatchMapping("/{id}/send-to-printer")
+    @PreAuthorize("hasRole('DESIGNER')")
     public PhotobookResponseDto sendToPrinter(@PathVariable UUID id){
             return new PhotobookResponseDto(photobookService.sendToPrinter(id));
     }
 
     @PatchMapping("/{id}/ready-for-pickup")
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public PhotobookResponseDto readyForPickup(@PathVariable UUID id){
         return new PhotobookResponseDto(photobookService.readyForPickup(id));
     }
