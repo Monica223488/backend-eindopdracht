@@ -46,21 +46,23 @@ public class AuthenticationService {
         if (userRepository.findByEmail(dto.email).isPresent()){
             throw new BadRequestException("Email already exists");
         }
-        User user = new User();
-        user.setName(dto.name);
-        user.setEmail(dto.email);
-        user.setPassword(passwordEncoder.encode(dto.password));
-        user.setRoles(Set.of(Role.valueOf(dto.role.toUpperCase())));
 
         Role role = roleRepository.findByName(dto.role.toUpperCase())
                 .orElseThrow(() -> new BadRequestException("Role not found"));
 
+        User user = User.create(
+                dto.name,
+                dto.email,
+                passwordEncoder.encode(dto.password),
+                Set.of(role)
+        );
+
+
         user.setRoles(Set.of(role));
 
-        UserRepository.save(user);
+        userRepository.save(user);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-        String token = jwtService.generateToken(userDetails);
+        String token = jwtService.generateToken(user.getEmail());
 
         return new AuthResponseDto(token);
     }
@@ -70,8 +72,7 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(dto.email, dto.password)
         );
 
-        userDetails userDetails = userDetailsService.loadUserByUsername(dto.email);
-        String token = jwtService.generateToken(userDetails);
+        String token = jwtService.generateToken(dto.email);
 
         return new AuthResponseDto(token);
     }

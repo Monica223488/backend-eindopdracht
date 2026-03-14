@@ -2,6 +2,7 @@ package com.eindopdracht.backend.controllers;
 
 import com.eindopdracht.backend.dtos.AuthResponseDto;
 import com.eindopdracht.backend.dtos.LoginRequestDto;
+import com.eindopdracht.backend.dtos.RegisterRequestDto;
 import com.eindopdracht.backend.services.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,11 @@ public class AuthenticationController {
 
     public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponseDto> register(@RequestBody RegisterRequestDto dto){
+        return ResponseEntity.ok(authenticationService.register(dto));
     }
 
     @PostMapping("/login")

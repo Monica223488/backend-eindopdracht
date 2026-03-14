@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.management.relation.Role;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -14,12 +13,13 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(name="users")
 public class User {
 
     @Id
     private UUID id;
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
     @Setter
     @Column(nullable = false)
@@ -28,10 +28,18 @@ public class User {
     private String name;
 
     @Setter
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name="role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    public static User create(String name, String email, String password, Set<Role> roles) {
+        User user = new User();
+        user.name = name;
+        user.email = email;
+        user.password = password;
+        user.roles = roles;
+        return user;
+    }
 
     @PrePersist
     public void generateId(){
