@@ -151,7 +151,7 @@ class ReceiptServiceTest {
                 ()-> receiptService.getSingleReceipt(id)
         );
 
-        assertEquals("Receipt" + id + "not found", ex.getMessage());
+        assertEquals("Receipt" + id + " not found", ex.getMessage());
     }
 
 }

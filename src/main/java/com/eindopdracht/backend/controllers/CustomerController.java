@@ -7,13 +7,12 @@ import com.eindopdracht.backend.models.Customer;
 import com.eindopdracht.backend.services.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/customers")
@@ -35,6 +34,20 @@ public class CustomerController {
                        .path("/" + customer.getId()).toUriString());
             return ResponseEntity.created(uri).body(customerResponseDto);
 
+    }
+
+    @GetMapping("/{id}")
+    public CustomerResponseDto getCustomer(@PathVariable UUID id) {
+        Customer customer = service.getCustomer(id);
+        return CustomerMapper.toResponseDto(customer);
+    }
+
+    @GetMapping
+    public List<CustomerResponseDto> getCustomers() {
+        return service.getAllCustomers()
+                .stream()
+                .map(CustomerMapper::toResponseDto)
+                .toList();
     }
 
 }

@@ -48,6 +48,6 @@ public class ReceiptService {
 
     public Receipt getSingleReceipt(UUID id){
         return receiptRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Receipt" + id + "not found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Receipt" + id + " not found"));
     }
 }

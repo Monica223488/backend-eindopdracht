@@ -7,13 +7,12 @@ import com.eindopdracht.backend.models.Appointment;
 import com.eindopdracht.backend.services.AppointmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/appointments")
@@ -34,5 +33,19 @@ public class AppointmentController {
                         .fromCurrentRequest()
                         .path("/" + appointment.getId()).toUriString());
         return ResponseEntity.created(uri).body(appointmentResponseDto);
+    }
+
+    @GetMapping
+    public List<AppointmentResponseDto> getAppointments() {
+        return service.getAllAppointments()
+                .stream()
+                .map(AppointmentMapper::toResponseDto)
+                .toList();
+    }
+
+    @GetMapping("/{id}")
+    public AppointmentResponseDto getAppointment(@PathVariable UUID id) {
+        Appointment appointment = service.getSingleAppointment(id);
+        return AppointmentMapper.toResponseDto(appointment);
     }
 }

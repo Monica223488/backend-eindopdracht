@@ -7,13 +7,11 @@ import com.eindopdracht.backend.models.Receipt;
 import com.eindopdracht.backend.services.ReceiptService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/receipts")
@@ -29,11 +27,24 @@ public class ReceiptController {
         Receipt receipt = this.service.createReceipt(receiptRequestDto);
         ReceiptResponseDto receiptResponseDto = ReceiptMapper.toResponseDto(receipt);
 
-        URI uri = URI.create(
-                ServletUriComponentsBuilder
+        URI uri = ServletUriComponentsBuilder
                         .fromCurrentRequest()
-                        .path("/" + receipt.getId()).toUriString());
+                        .path("/{id}")
+                        .buildAndExpand(receipt.getId())
+                        .toUri();
+
         return ResponseEntity.created(uri).body(receiptResponseDto);
 
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReceiptResponseDto> getSingleReceipt(@PathVariable UUID id) {
+
+        Receipt receipt = service.getSingleReceipt(id);
+        ReceiptResponseDto receiptResponseDto = ReceiptMapper.toResponseDto(receipt);
+
+        return ResponseEntity.ok(receiptResponseDto);
+    }
+
+
 }
