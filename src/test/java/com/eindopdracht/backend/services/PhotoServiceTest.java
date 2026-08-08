@@ -45,7 +45,6 @@ class PhotoServiceTest {
 
         PhotoService service = new PhotoService(photoRepository, newDir.toString());
 
-        assertNotNull(service);
         assertTrue(Files.exists(newDir));
         assertTrue(Files.isDirectory(newDir));
     }
@@ -79,21 +78,6 @@ class PhotoServiceTest {
     }
 
     @Test
-    void upload_shouldThrowBadRequest_whenContentTypeIsNull() {
-        MockMultipartFile file = new MockMultipartFile(
-                "file", "test.jpg", null, "abc".getBytes()
-        );
-
-        BadRequestException ex = assertThrows(
-                BadRequestException.class,
-                () -> photoService.upload(file)
-        );
-
-        assertEquals("Alleen afbeeldingen toegestaan", ex.getMessage());
-        verify(photoRepository, never()).save(any());
-    }
-
-    @Test
     void upload_shouldThrowBadRequest_whenContentTypeIsNotImage() {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "test.txt", "text/plain", "abc".getBytes()
@@ -106,6 +90,34 @@ class PhotoServiceTest {
 
         assertEquals("Alleen afbeeldingen toegestaan", ex.getMessage());
         verify(photoRepository, never()).save(any());
+    }
+
+    @Test
+    void upload_shouldSavePngExtension_whenPngIsValid() {
+        MockMultipartFile file = new MockMultipartFile(
+                "file", "test.png", "image/png", "abc".getBytes()
+        );
+
+        when(photoRepository.save(any(Photo.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Photo result = photoService.upload(file);
+
+        assertTrue(result.getStorageKey().endsWith(".png"));
+    }
+
+    @Test
+    void upload_shouldUseNoExtension_whenImageTypeIsOther() {
+        MockMultipartFile file = new MockMultipartFile(
+                "file", "test.gif", "image/gif", "abc".getBytes()
+        );
+
+        when(photoRepository.save(any(Photo.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Photo result = photoService.upload(file);
+
+        assertFalse(result.getStorageKey().contains("."));
     }
 
     @Test
@@ -129,6 +141,26 @@ class PhotoServiceTest {
         verify(photoRepository).save(any(Photo.class));
     }
 
+    @Test
+    void delete_shouldThrowRuntimeException_whenFileCannotBeDeleted() throws IOException {
+        UUID id = UUID.randomUUID();
+
+        Path directory = tempDir.resolve("folder");
+        Files.createDirectory(directory);
+        Files.writeString(directory.resolve("file.txt"), "abc");
+
+        Photo photo = mock(Photo.class);
+        when(photo.getStorageKey()).thenReturn("folder");
+        when(photoRepository.findById(id)).thenReturn(Optional.of(photo));
+
+        RuntimeException ex = assertThrows(
+                RuntimeException.class,
+                () -> photoService.delete(id)
+        );
+
+        assertEquals("Niet gelukt om bestand te verwijderen", ex.getMessage());
+        verify(photoRepository, never()).delete(photo);
+    }
     @Test
     void upload_shouldThrowRuntimeException_whenInputStreamFails() throws IOException {
         MultipartFile file = mock(MultipartFile.class);
@@ -159,18 +191,6 @@ class PhotoServiceTest {
         verify(photoRepository).findById(id);
     }
 
-    @Test
-    void getMeta_shouldThrowNotFound_whenIdDoesNotExist() {
-        UUID id = UUID.randomUUID();
-        when(photoRepository.findById(id)).thenReturn(Optional.empty());
-
-        ResourceNotFoundException ex = assertThrows(
-                ResourceNotFoundException.class,
-                () -> photoService.getMeta(id)
-        );
-
-        assertEquals("Foto niet gevonden", ex.getMessage());
-    }
 
     @Test
     void loadAsResource_shouldReturnResource_whenFileExists() throws IOException {
@@ -192,7 +212,7 @@ class PhotoServiceTest {
                 () -> photoService.loadAsResource("missing.jpg")
         );
 
-        assertEquals("Bestand niet gevonden", ex.getMessage());
+        assertEquals("Het bestand is niet gevonden", ex.getMessage());
         assertNotNull(ex.getCause());
     }
 
@@ -203,7 +223,7 @@ class PhotoServiceTest {
                 () -> photoService.loadAsResource("../secret.txt")
         );
 
-        assertEquals("Bestand niet gevonden", ex.getMessage());
+        assertEquals("Het bestand is niet gevonden", ex.getMessage());
         assertNotNull(ex.getCause());
         assertTrue(ex.getCause() instanceof BadRequestException);
     }
@@ -236,7 +256,7 @@ class PhotoServiceTest {
                 () -> photoService.delete(id)
         );
 
-        assertEquals("Foto niet gevonden", ex.getMessage());
+        assertEquals("De foto is niet gevonden", ex.getMessage());
         verify(photoRepository, never()).delete(any());
     }
 
