@@ -7,6 +7,7 @@ import com.eindopdracht.backend.models.Customer;
 import com.eindopdracht.backend.services.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,6 +24,7 @@ public class CustomerController {
     public CustomerController(CustomerService service) {this.service = service;}
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DESIGNER')")
     public ResponseEntity<CustomerResponseDto> createCustomer (@RequestBody CustomerRequestDto customerRequestDto){
 
        Customer customer = this.service.createCustomer(customerRequestDto);
@@ -37,12 +39,14 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DESIGNER')")
     public CustomerResponseDto getCustomer(@PathVariable UUID id) {
         Customer customer = service.getCustomer(id);
         return CustomerMapper.toResponseDto(customer);
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DESIGNER')")
     public List<CustomerResponseDto> getCustomers() {
         return service.getAllCustomers()
                 .stream()

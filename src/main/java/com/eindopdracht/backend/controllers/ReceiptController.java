@@ -7,6 +7,7 @@ import com.eindopdracht.backend.models.Receipt;
 import com.eindopdracht.backend.services.ReceiptService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,6 +39,7 @@ public class ReceiptController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DESIGNER')")
     public ResponseEntity<ReceiptResponseDto> getSingleReceipt(@PathVariable UUID id) {
 
         Receipt receipt = service.getSingleReceipt(id);

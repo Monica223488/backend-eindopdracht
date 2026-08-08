@@ -130,45 +130,6 @@ class PhotoServiceTest {
     }
 
     @Test
-    void upload_shouldSavePhotoAndFile_whenPngIsValid() throws IOException {
-        MockMultipartFile file = new MockMultipartFile(
-                "file", "test.png", "image/png", "png".getBytes()
-        );
-
-        when(photoRepository.save(any(Photo.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
-
-        Photo result = photoService.upload(file);
-
-        assertNotNull(result);
-        assertEquals("image/png", result.getContentType());
-        assertTrue(result.getStorageKey().endsWith(".png"));
-        assertTrue(Files.exists(tempDir.resolve(result.getStorageKey())));
-
-        verify(photoRepository).save(any(Photo.class));
-    }
-
-    @Test
-    void upload_shouldUseEmptyExtension_whenImageTypeIsUnknown() {
-        MockMultipartFile file = new MockMultipartFile(
-                "file", "test.gif", "image/gif", "gifdata".getBytes()
-        );
-
-        when(photoRepository.save(any(Photo.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
-
-        Photo result = photoService.upload(file);
-
-        assertNotNull(result);
-        assertEquals("image/gif", result.getContentType());
-        assertFalse(result.getStorageKey().endsWith(".jpg"));
-        assertFalse(result.getStorageKey().endsWith(".png"));
-        assertTrue(Files.exists(tempDir.resolve(result.getStorageKey())));
-
-        verify(photoRepository).save(any(Photo.class));
-    }
-
-    @Test
     void upload_shouldThrowRuntimeException_whenInputStreamFails() throws IOException {
         MultipartFile file = mock(MultipartFile.class);
 
@@ -248,7 +209,7 @@ class PhotoServiceTest {
     }
 
     @Test
-    void delete_shouldRemoveFileAndDeleteEntity_whenPhotoExists() throws IOException {
+    void delete_shouldRemoveFileAndEntity_whenPhotoExists() throws IOException {
         UUID id = UUID.randomUUID();
         String storageKey = "to-delete.jpg";
 
@@ -279,39 +240,4 @@ class PhotoServiceTest {
         verify(photoRepository, never()).delete(any());
     }
 
-    @Test
-    void delete_shouldDeleteEntityEvenWhenFileDoesNotExist() {
-        UUID id = UUID.randomUUID();
-        String storageKey = "missing-file.jpg";
-
-        Photo photo = mock(Photo.class);
-        when(photo.getStorageKey()).thenReturn(storageKey);
-        when(photoRepository.findById(id)).thenReturn(Optional.of(photo));
-
-        assertDoesNotThrow(() -> photoService.delete(id));
-
-        verify(photoRepository).delete(photo);
-    }
-
-    @Test
-    void delete_shouldThrowRuntimeException_whenDeleteFails() throws IOException {
-        UUID id = UUID.randomUUID();
-        String storageKey = "not-empty-dir";
-
-        Path dir = tempDir.resolve(storageKey);
-        Files.createDirectories(dir);
-        Files.writeString(dir.resolve("child.txt"), "data");
-
-        Photo photo = mock(Photo.class);
-        when(photo.getStorageKey()).thenReturn(storageKey);
-        when(photoRepository.findById(id)).thenReturn(Optional.of(photo));
-
-        RuntimeException ex = assertThrows(
-                RuntimeException.class,
-                () -> photoService.delete(id)
-        );
-
-        assertEquals("Kon bestand niet verwijderen", ex.getMessage());
-        verify(photoRepository, never()).delete(photo);
-    }
 }

@@ -7,6 +7,7 @@ import com.eindopdracht.backend.models.Appointment;
 import com.eindopdracht.backend.services.AppointmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,6 +24,7 @@ public class AppointmentController {
     public AppointmentController(AppointmentService service) {this.service = service;}
 
     @PostMapping
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<AppointmentResponseDto> createAppointment (@RequestBody AppointmentRequestDto appointmentRequestDto){
 
         Appointment appointment = this.service.createAppointment(appointmentRequestDto);
@@ -36,6 +38,7 @@ public class AppointmentController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public List<AppointmentResponseDto> getAppointments() {
         return service.getAllAppointments()
                 .stream()
@@ -44,6 +47,7 @@ public class AppointmentController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public AppointmentResponseDto getAppointment(@PathVariable UUID id) {
         Appointment appointment = service.getSingleAppointment(id);
         return AppointmentMapper.toResponseDto(appointment);

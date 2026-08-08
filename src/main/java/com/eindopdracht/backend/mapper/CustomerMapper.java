@@ -9,7 +9,8 @@ public class CustomerMapper {
     public static Customer toEntity(CustomerRequestDto customerRequestDto) {
         Customer customer = new Customer(
                 customerRequestDto.name,
-                customerRequestDto.phoneNumber
+                customerRequestDto.phoneNumber,
+                customerRequestDto.email
         );
         return customer;
     }
@@ -18,6 +19,7 @@ public class CustomerMapper {
         CustomerResponseDto customerResponseDto = new CustomerResponseDto();
         customerResponseDto.name = customer.getName();
         customerResponseDto.phoneNumber = customer.getPhoneNumber();
+        customerResponseDto.email = customer.getEmail();
         return customerResponseDto;
 
     }

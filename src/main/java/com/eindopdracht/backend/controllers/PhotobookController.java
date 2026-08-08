@@ -26,12 +26,14 @@ public class PhotobookController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('DESIGNER')")
     public ResponseEntity<PhotobookResponseDto> create(@RequestBody PhotobookCreateRequestDto dto) {
         Photobook created = photobookService.create(dto.title);
         return ResponseEntity.status(HttpStatus.CREATED).body(new PhotobookResponseDto(created));
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('DESIGNER')")
     public List<PhotobookResponseDto> list(){
         return photobookService.list().stream()
                 .map(PhotobookResponseDto::new)
@@ -39,27 +41,32 @@ public class PhotobookController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('DESIGNER')")
     public PhotobookResponseDto get(@PathVariable UUID id){
         return new PhotobookResponseDto(photobookService.get(id));
     }
 
     @PostMapping("/{photobookId}/photos/{photoId}")
+    @PreAuthorize("hasRole('DESIGNER')")
     public ResponseEntity<Void> addPhoto(@PathVariable UUID photobookId, @PathVariable UUID photoId) {
         photobookService.addPhoto(photobookId, photoId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/photos/order")
+    @PreAuthorize("hasRole('DESIGNER')")
     public ResponseEntity<Void> setPhotoOrder(@PathVariable UUID id, @RequestBody PhotoOrderRequestDto dto) {
         photobookService.setPhotoOrder(id, dto.photoIds);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/ready-for-review")
+    @PreAuthorize("hasRole('DESIGNER')")
     public PhotobookResponseDto readyForReview(@PathVariable UUID id){
         return new PhotobookResponseDto(photobookService.readyForReview(id));
     }
 
+    @PreAuthorize("hasRole('CUSTOMER')")
     @PatchMapping("/{id}/approve")
     public PhotobookResponseDto approve(@PathVariable UUID id){
         return new PhotobookResponseDto(photobookService.approve(id));

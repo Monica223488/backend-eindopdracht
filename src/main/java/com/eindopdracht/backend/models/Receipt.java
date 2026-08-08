@@ -34,10 +34,11 @@ public class Receipt {
     @JoinColumn(name= "order_id", nullable = false, unique = true)
     private Order order;
 
-    public Receipt(String summary, String customerInformation, String appointmentInformation) {
+    public Receipt(String summary, String customerInformation, String appointmentInformation, Order order) {
         this.summary = summary;
         this.customerInformation = customerInformation;
         this.appointmentInformation = appointmentInformation;
+        this.order = order;
     }
 
 

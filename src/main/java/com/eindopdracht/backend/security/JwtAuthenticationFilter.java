@@ -1,6 +1,5 @@
 package com.eindopdracht.backend.security;
 
-import com.eindopdracht.backend.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -20,6 +20,8 @@ public class Customer {
     private String name;
     @Setter
     private String phoneNumber;
+    @Setter
+    private String email;
 
     @PrePersist
     public void generateId(){
@@ -28,9 +30,10 @@ public class Customer {
         }
     }
 
-    public Customer(String name, String phoneNumber) {
+    public Customer(String name, String phoneNumber, String email) {
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.email = email;
     }
 
 

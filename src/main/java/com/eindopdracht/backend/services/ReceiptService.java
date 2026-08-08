@@ -41,7 +41,7 @@ public class ReceiptService {
                 appointmentInformation = "No appointment planned";
             }
 
-            Receipt receipt = new Receipt(summary, customerInformation, appointmentInformation);
+            Receipt receipt = new Receipt(summary, customerInformation, appointmentInformation, order);
             return receiptRepository.save(receipt);
 
     }
