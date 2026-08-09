@@ -17,8 +17,6 @@ public class Photo {
     @Id
     private UUID id;
     @Setter
-    private String name;
-    @Setter
     @Column(nullable = false)
     private String originalFileName;
     @Setter
