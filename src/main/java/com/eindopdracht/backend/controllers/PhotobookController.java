@@ -1,9 +1,7 @@
 package com.eindopdracht.backend.controllers;
 
-import com.eindopdracht.backend.dtos.PhotoResponseDto;
 import com.eindopdracht.backend.dtos.PhotobookResponseDto;
 import com.eindopdracht.backend.dtos.PhotobookCreateRequestDto;
-import com.eindopdracht.backend.dtos.PhotoOrderRequestDto;
 import com.eindopdracht.backend.dtos.PhotobookRejectionDto;
 import com.eindopdracht.backend.models.Photobook;
 import com.eindopdracht.backend.services.PhotobookService;
@@ -53,13 +51,6 @@ public class PhotobookController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/photos/order")
-    @PreAuthorize("hasRole('DESIGNER')")
-    public ResponseEntity<Void> setPhotoOrder(@PathVariable UUID id, @RequestBody PhotoOrderRequestDto dto) {
-        photobookService.setPhotoOrder(id, dto.photoIds);
-        return ResponseEntity.noContent().build();
-    }
-
     @PatchMapping("/{id}/ready-for-review")
     @PreAuthorize("hasRole('DESIGNER')")
     public PhotobookResponseDto readyForReview(@PathVariable UUID id){
@@ -74,9 +65,8 @@ public class PhotobookController {
 
     @PatchMapping("/{id}/reject")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public PhotobookResponseDto reject(@PathVariable UUID id, @RequestBody(required = false) PhotobookRejectionDto dto){
-        String comment = dto == null ? null : dto.comment;
-        return new PhotobookResponseDto(photobookService.reject(id, comment));
+    public PhotobookResponseDto reject(@PathVariable UUID id){
+        return new PhotobookResponseDto(photobookService.reject(id));
 
     }
 

@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -126,6 +127,19 @@ class ReceiptServiceTest {
 
         assertEquals("Order" + orderId + " not found!", ex.getMessage());
         verify(receiptRepository, never()).save(any());
+    }
+
+    @Test
+    void getAllReceipts_shouldReturnAllReceipts() {
+        Receipt receipt1 = mock(Receipt.class);
+        Receipt receipt2 = mock(Receipt.class);
+
+        List<Receipt> receipts = List.of(receipt1, receipt2);
+        when(receiptRepository.findAll()).thenReturn(receipts);
+
+        List<Receipt> result = receiptService.getAllReceipts();
+
+        assertEquals(receipts, result);
     }
 
     @Test

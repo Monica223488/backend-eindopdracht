@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -36,6 +37,18 @@ public class OrderController {
                         .fromCurrentRequest()
                         .path("/" + order.getId()).toUriString());
             return ResponseEntity.created(uri).body(orderResponseDto);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DESIGNER')")
+    public ResponseEntity<List<OrderResponseDto>> getAllOrders() {
+
+        List<OrderResponseDto> orders = service.getAllOrders()
+                .stream()
+                .map(OrderMapper::toResponseDto)
+                .toList();
+
+        return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{id}")

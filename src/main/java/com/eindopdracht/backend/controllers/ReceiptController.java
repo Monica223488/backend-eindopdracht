@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,6 +24,7 @@ public class ReceiptController {
     public ReceiptController(ReceiptService service) {this.service = service; }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DESIGNER')")
     public ResponseEntity<ReceiptResponseDto> createReceipt (@Valid @RequestBody ReceiptRequestDto receiptRequestDto){
 
         Receipt receipt = this.service.createReceipt(receiptRequestDto);
@@ -36,6 +38,18 @@ public class ReceiptController {
 
         return ResponseEntity.created(uri).body(receiptResponseDto);
 
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DESIGNER')")
+    public ResponseEntity<List<ReceiptResponseDto>> getAllReceipts() {
+
+        List<ReceiptResponseDto> receipts = service.getAllReceipts()
+                .stream()
+                .map(ReceiptMapper::toResponseDto)
+                .toList();
+
+        return ResponseEntity.ok(receipts);
     }
 
     @GetMapping("/{id}")
