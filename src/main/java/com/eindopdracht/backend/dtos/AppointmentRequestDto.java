@@ -1,13 +1,13 @@
 package com.eindopdracht.backend.dtos;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class AppointmentRequestDto {
-    @NotEmpty
-    public LocalDate AppointmentDate;
-    @NotEmpty
-    public LocalTime AppointmentTime;
+    @NotNull
+    public LocalDate appointmentDate;
+    @NotNull
+    public LocalTime appointmentTime;
 }
