@@ -6,4 +6,5 @@ public class CustomerResponseDto {
     public UUID id;
     public String name;
     public String phoneNumber;
+    public String email;
 }

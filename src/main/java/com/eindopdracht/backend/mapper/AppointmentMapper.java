@@ -10,16 +10,17 @@ public class AppointmentMapper {
 
     public static Appointment toEntity(AppointmentRequestDto appointmentRequestDto) {
         Appointment appointment = new Appointment(
-                appointmentRequestDto.AppointmentDate,
-                appointmentRequestDto.AppointmentTime
+                appointmentRequestDto.appointmentDate,
+                appointmentRequestDto.appointmentTime
         );
         return appointment;
     }
 
     public static AppointmentResponseDto toResponseDto (Appointment appointment){
         AppointmentResponseDto appointmentResponseDto = new AppointmentResponseDto();
-        appointmentResponseDto.AppointmentDate = appointment.getAppointmentDate();
-        appointmentResponseDto.AppointmentTime = appointment.getAppointmentTime();
+        appointmentResponseDto.id = appointment.getId();
+        appointmentResponseDto.appointmentDate = appointment.getAppointmentDate();
+        appointmentResponseDto.appointmentTime = appointment.getAppointmentTime();
         return appointmentResponseDto;
     }
 

@@ -7,13 +7,13 @@ import com.eindopdracht.backend.models.Receipt;
 import com.eindopdracht.backend.services.ReceiptService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/receipts")
@@ -24,16 +24,43 @@ public class ReceiptController {
     public ReceiptController(ReceiptService service) {this.service = service; }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DESIGNER')")
     public ResponseEntity<ReceiptResponseDto> createReceipt (@Valid @RequestBody ReceiptRequestDto receiptRequestDto){
 
         Receipt receipt = this.service.createReceipt(receiptRequestDto);
         ReceiptResponseDto receiptResponseDto = ReceiptMapper.toResponseDto(receipt);
 
-        URI uri = URI.create(
-                ServletUriComponentsBuilder
+        URI uri = ServletUriComponentsBuilder
                         .fromCurrentRequest()
-                        .path("/" + receipt.getId()).toUriString());
+                        .path("/{id}")
+                        .buildAndExpand(receipt.getId())
+                        .toUri();
+
         return ResponseEntity.created(uri).body(receiptResponseDto);
 
     }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DESIGNER')")
+    public ResponseEntity<List<ReceiptResponseDto>> getAllReceipts() {
+
+        List<ReceiptResponseDto> receipts = service.getAllReceipts()
+                .stream()
+                .map(ReceiptMapper::toResponseDto)
+                .toList();
+
+        return ResponseEntity.ok(receipts);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'DESIGNER')")
+    public ResponseEntity<ReceiptResponseDto> getSingleReceipt(@PathVariable UUID id) {
+
+        Receipt receipt = service.getSingleReceipt(id);
+        ReceiptResponseDto receiptResponseDto = ReceiptMapper.toResponseDto(receipt);
+
+        return ResponseEntity.ok(receiptResponseDto);
+    }
+
+
 }

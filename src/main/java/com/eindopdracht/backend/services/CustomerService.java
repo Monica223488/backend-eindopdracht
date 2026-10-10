@@ -7,6 +7,7 @@ import com.eindopdracht.backend.models.Customer;
 import com.eindopdracht.backend.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,9 +20,13 @@ public class CustomerService {
     public Customer createCustomer(CustomerRequestDto customerRequestDto) {
         return this.repos.save(CustomerMapper.toEntity(customerRequestDto));
     }
-        public Customer getSingleCustomer(UUID id){
-            return this.repos.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer" + id + "not found!"));
 
+    public Customer getCustomer(UUID id){
+        return repos.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer " + id + " not found!"));
+    }
 
+    public List<Customer> getAllCustomers(){
+        return repos.findAll();
     }
 }

@@ -11,6 +11,7 @@ import com.eindopdracht.backend.repositories.OrderRepository;
 import com.eindopdracht.backend.repositories.ReceiptRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -41,13 +42,17 @@ public class ReceiptService {
                 appointmentInformation = "No appointment planned";
             }
 
-            Receipt receipt = new Receipt(summary, customerInformation, appointmentInformation);
+            Receipt receipt = new Receipt(summary, customerInformation, appointmentInformation, order);
             return receiptRepository.save(receipt);
 
     }
 
+    public List<Receipt> getAllReceipts() {
+        return receiptRepository.findAll();
+    }
+
     public Receipt getSingleReceipt(UUID id){
         return receiptRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Receipt" + id + "not found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Receipt" + id + " not found"));
     }
 }

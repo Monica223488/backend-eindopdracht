@@ -9,15 +9,18 @@ public class CustomerMapper {
     public static Customer toEntity(CustomerRequestDto customerRequestDto) {
         Customer customer = new Customer(
                 customerRequestDto.name,
-                customerRequestDto.phoneNumber
+                customerRequestDto.phoneNumber,
+                customerRequestDto.email
         );
         return customer;
     }
 
     public static CustomerResponseDto toResponseDto (Customer customer){
         CustomerResponseDto customerResponseDto = new CustomerResponseDto();
+        customerResponseDto.id = customer.getId();
         customerResponseDto.name = customer.getName();
         customerResponseDto.phoneNumber = customer.getPhoneNumber();
+        customerResponseDto.email = customer.getEmail();
         return customerResponseDto;
 
     }

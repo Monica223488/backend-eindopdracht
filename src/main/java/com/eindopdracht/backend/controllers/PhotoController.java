@@ -7,6 +7,7 @@ import com.eindopdracht.backend.services.PhotoService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
@@ -25,6 +26,7 @@ public class PhotoController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('DESIGNER')")
     public ResponseEntity<PhotoResponseDto> upload(@RequestParam("file") MultipartFile file) {
         Photo saved = photoService.upload(file);
         PhotoResponseDto dto = new PhotoResponseDto(saved);
@@ -34,6 +36,7 @@ public class PhotoController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('DESIGNER')")
     public ResponseEntity<Resource> view(@PathVariable UUID id){
 
             Photo meta = photoService.getMeta(id);
@@ -47,6 +50,7 @@ public class PhotoController {
 
 
         @GetMapping("/{id}/download")
+        @PreAuthorize("hasRole('DESIGNER')")
         public ResponseEntity<Resource> download(@PathVariable UUID id){
 
             Photo meta = photoService.getMeta(id);
@@ -62,6 +66,7 @@ public class PhotoController {
 
 
         @DeleteMapping("/{id}")
+        @PreAuthorize("hasRole('DESIGNER')")
     public ResponseEntity<Void> delete(@PathVariable UUID id){
         photoService.delete(id);
         return ResponseEntity.noContent().build();

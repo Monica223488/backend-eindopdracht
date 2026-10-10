@@ -7,6 +7,7 @@ import com.eindopdracht.backend.models.Appointment;
 import com.eindopdracht.backend.repositories.AppointmentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,7 +20,12 @@ public class AppointmentService {
     public Appointment createAppointment(AppointmentRequestDto appointmentRequestDto){
         return this.repos.save(AppointmentMapper.toEntity(appointmentRequestDto));
     }
+
+    public List<Appointment> getAllAppointments() {
+        return repos.findAll();
+    }
+
     public Appointment getSingleAppointment(UUID id){
-        return this.repos.findById(id).orElseThrow(()-> new ResourceNotFoundException("Appointment" + id + "not found!"));
+        return this.repos.findById(id).orElseThrow(()-> new ResourceNotFoundException("Appointment" + id + " not found!"));
     }
 }

@@ -34,9 +34,13 @@ public class GlobalExceptionController {
         return ResponseEntity.badRequest().body(errors);
     }
 
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleAllExceptions(Exception ex){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<String> handleException(Exception exception) {
+        exception.printStackTrace();
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Er is een interne fout opgetreden");
     }
 }

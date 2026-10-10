@@ -5,6 +5,7 @@ import com.eindopdracht.backend.dtos.LoginRequestDto;
 import com.eindopdracht.backend.dtos.RegisterRequestDto;
 import com.eindopdracht.backend.services.AuthenticationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

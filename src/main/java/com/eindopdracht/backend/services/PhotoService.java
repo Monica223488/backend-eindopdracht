@@ -69,7 +69,7 @@ public class PhotoService {
 
     public Photo getMeta(UUID id) {
         return photoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Foto niet gevonden"));
+                .orElseThrow(() -> new ResourceNotFoundException("De foto is niet gevonden"));
     }
 
     public Resource loadAsResource(String storageKey) {
@@ -77,10 +77,10 @@ public class PhotoService {
             Path path = root.resolve(storageKey).normalize();
             if (!path.startsWith(root)) throw new BadRequestException ("Ongeldig pad");
             Resource res = new UrlResource(path.toUri());
-            if (!res.exists()) throw new ResourceNotFoundException("Bestand niet gevonden");
+            if (!res.exists()) throw new ResourceNotFoundException("Het bestand is niet gevonden");
             return res;
         } catch (Exception e){
-            throw new RuntimeException("Bestand niet gevonden", e);
+            throw new RuntimeException("Het bestand is niet gevonden", e);
         }
     }
 
@@ -91,7 +91,7 @@ public class PhotoService {
             Files.deleteIfExists(root.resolve(photo.getStorageKey()).normalize());
 
         } catch (IOException e){
-            throw new RuntimeException("Kon bestand niet verwijderen", e);
+            throw new RuntimeException("Niet gelukt om bestand te verwijderen", e);
         }
         photoRepository.delete(photo);
     }

@@ -46,21 +46,7 @@ public class PhotobookService {
 
         int nextIndex = photobook.getPhotos() == null ? 0 : photobook.getPhotos().size();
         photo.setSortIndex(nextIndex);
-    }
-
-    public void setPhotoOrder(UUID photobookId, List<UUID> photoIds){
-        Photobook photobook = get(photobookId);
-
-        for (int i = 0; i < photoIds.size(); i++){
-            UUID photoId = photoIds.get(i);
-            Photo photo = photoRepository.findById(photoId)
-                    .orElseThrow(()-> new ResourceNotFoundException("Foto is niet gevonden" + photoId));
-            if (photo.getPhotobook() == null || !photo.getPhotobook().getId().equals(photobook.getId())){
-                throw new BadRequestException("Deze foto hoort niet bij dit fotoboek:" + photoId);
-            }
-            photo.setSortIndex(i);
-            photoRepository.save(photo);
-        }
+        photoRepository.save(photo);
     }
 
     public Photobook readyForReview(UUID id){
@@ -72,13 +58,12 @@ public class PhotobookService {
         return photobookRepository.save(photobook);
     }
 
-    public Photobook reject(UUID id, String comment){
+    public Photobook reject(UUID id){
         Photobook photobook = get(id);
         if (photobook.getStatus() != Photobook.PhotobookStatus.READY_FOR_REVIEW){
             throw new BadRequestException("Alleen fotoboeken READY_FOR_REVIEW kunnen afgekeurd worden.");
         }
         photobook.setStatus(Photobook.PhotobookStatus.REJECTED);
-        photobook.setLastFeedback(comment);
 
         return photobookRepository.save(photobook);
     }
@@ -86,9 +71,9 @@ public class PhotobookService {
     public Photobook approve(UUID id){
         Photobook photobook = get(id);
         if (photobook.getStatus() != Photobook.PhotobookStatus.READY_FOR_REVIEW){
-            throw new BadRequestException("Alleen fotoboeken READY_FOR_REVIEW kunnen afgekeurd worden.");
+            throw new BadRequestException("Alleen fotoboeken READY_FOR_REVIEW kunnen goedgekeurd worden.");
         }
-        photobook.setStatus(Photobook.PhotobookStatus.REJECTED);
+        photobook.setStatus(Photobook.PhotobookStatus.APPROVED);
         return photobookRepository.save(photobook);
     }
 

@@ -6,6 +6,6 @@ import java.util.UUID;
 
 public class AppointmentResponseDto {
     public UUID id;
-    public LocalDate AppointmentDate;
-    public LocalTime AppointmentTime;
+    public LocalDate appointmentDate;
+    public LocalTime appointmentTime;
 }

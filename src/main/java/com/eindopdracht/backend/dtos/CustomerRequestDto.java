@@ -8,4 +8,5 @@ public class CustomerRequestDto {
     public String name;
     @Min(value=10)
     public String phoneNumber;
+    public String email;
 }
